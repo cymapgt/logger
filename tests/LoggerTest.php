@@ -25,10 +25,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers cymapgt\core\utility\logger\Logger::getLogger
-     * @todo   Implement testGetLogger().
      */
     public function testGetLogger() {
         $logger = Logger::getLogger(\LOGGER_STDERR);
     }
-
 }
