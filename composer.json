@@ -19,7 +19,7 @@
     "name" : "cymapgt/logger",
     "type" : "library",
     "description" : "Wrapper for Monolog. Provides custom log levels with customized Handlers based on log level",
-    "license" : "proprietary",
+    "license" : "BSD 3-clause",
     "require" : {
         "cymapgt/notifier" : "^1.0.0",
         "monolog/monolog" : "^1.0.0"
@@ -29,7 +29,7 @@
     },
     "support" : {
         "email" : "cogana@gmail.com",
-        "source" : "https://bitbucket.org/cymapgt/notifier/"
+        "source" : "https://github.com/cymapgt/logger"
     },
     "authors" : [{
         "name" : "Cyril Ogana",
@@ -37,11 +37,5 @@
         "homepage" : "http://www.cymapk.com",
         "role" : "Maintainer"        
     }],
-    "homepage" : "https://bitbucket.org/cymapgt/notifier/",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://bitbucket.org/cymapgt/notifier"
-        }
-    ]    
+    "homepage" : "https://github.com/cymapgt/logger"
 }
