@@ -59,7 +59,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase {
         $concreteLogger = $cgtLogger->getLogger();
         
         //write the log
-        $logMessage = "Sissoko for Balon d'Or";
+        $logMessage = "Sissoko for Balon d'Or 2019";
         $concreteLogger->addWarning(
             $logMessage
         );
