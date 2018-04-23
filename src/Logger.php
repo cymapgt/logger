@@ -8,7 +8,8 @@ use Monolog\Handler\NullHandler;
 /**
  * Logger
  * 
- * This class provides persistent access to logger, via encapsulating Monolog
+ * Facilitate configuration of Log Handlers and Formatters to aid Developers log
+ * to the destinations
  * 
  * 
  * @author    - Cyril Ogana <cogana@gmail.com>
@@ -18,19 +19,19 @@ use Monolog\Handler\NullHandler;
 class Logger implements \Psr\Log\LoggerAwareInterface
 {
     //instantiate properties
-    private $isUsingConcreteHandler = false;
+    private $channelName = 'null_logger';
     private $concreteLogger = null;
     private $nullLogger = null;
     private $configuredLogHandlers = array();
     
     /**
-     *  Prevent direct object creation
-     * 
-     * @private
-     * @final
+     *  Constructor
      */
-    public function __construct() {
-        //instantiate the Null Logger
+    public function __construct($channelName) {
+        //Channel Name
+        $this->channelName = $channelName;
+        
+        //instantiate the Null Logger (will be used if User did not want a "real" logger e.g. when testing)
         $nullLogger = new MonologLogger('null_logger');
         $nullHandler = new NullHandler;
         $nullLogger->pushHandler($nullHandler);
@@ -45,23 +46,33 @@ class Logger implements \Psr\Log\LoggerAwareInterface
      */
     final private function __clone() {
     }
+    
     /**
      * Add log handlers to the configuration
      * 
-     * @param array $logHandlers
-     * @param bool $createLogger
+     * @param array $logHandlers - Array of log handler configuration. The alphanumeric keys are the namespace
+     * @param bool $createLogger - Boolean flag. If true, create concrete Logger and instantiate the log handlers
      */
     public function addLogHandler(array $logHandlers, $createLogger = false) {
-        $this->configuredLogHandlers = array_merge($this->configuredLogHandlers, $logHandlers);
-        
-        if ($createLogger === true) {
-            $this->createLogger(key($logHandlers));
-            $this->createLogHandlers();
+        try {
+            $this->configuredLogHandlers = array_merge($this->configuredLogHandlers, $logHandlers);
+
+            if ($createLogger === true) {
+                $this->createLogger($this->channelName);
+                $this->createLogHandlers();
+            }            
+        } catch (Exception $ex) {
+            throw new LoggerException (
+                "An exception occurred when adding the Log Handler to "
+                . $this->channelName
+                . ":"
+                . $ex->getMessage()
+            );
         }
     }
     
     /**
-     * Create the Monolog logger which will be injected with Handlers and Formaters
+     * Create the Monolog logger which will be injected with Handlers and Formatters
      */
     public function createLogger($channelName) {
         $loggerObj = new MonologLogger($channelName);
@@ -74,19 +85,15 @@ class Logger implements \Psr\Log\LoggerAwareInterface
      */
     protected function createLogHandlers() {
         $logHandlers = $this->configuredLogHandlers;
-        
-        foreach ($logHandlers as $logHandler) {
-            if (is_array($logHandler)) {                
-                foreach ($logHandler as $handlerNamespace => $handlerDetails) {
-                    if (
-                        is_array($handlerDetails)
-                        && array_key_exists('handler_parameters', $handlerDetails)
-                    ) {
-                        $handlerParameters = $handlerDetails['handler_parameters'];
-                        $handlerObj = new $handlerNamespace(...$handlerParameters);
-                        $this->concreteLogger->pushHandler($handlerObj);
-                    }
-                }
+                      
+        foreach ($logHandlers as $handlerNamespace => $handlerDetails) {
+            if (
+                is_array($handlerDetails)
+                && array_key_exists('handler_parameters', $handlerDetails)
+            ) {
+                $handlerParameters = $handlerDetails['handler_parameters'];
+                $handlerObj = new $handlerNamespace(...$handlerParameters);
+                $this->concreteLogger->pushHandler($handlerObj);
             }
         }
     }
