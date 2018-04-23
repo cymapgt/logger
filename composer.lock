@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fb71c17f9e30b092c5968435bde0d93",
+    "content-hash": "b98bc9e89cef1425792ec745551d0bd2",
     "packages": [
         {
             "name": "cymapgt/notifier",
@@ -470,6 +470,55 @@
                 "instantiate"
             ],
             "time": "2015-06-14T21:17:01+00:00"
+        },
+        {
+            "name": "femtopixel/monolog-csvhandler",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/femtopixel/monolog-csvhandler.git",
+                "reference": "ac9c53043e55575403d99cc6ac514478a28dafde"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/femtopixel/monolog-csvhandler/zipball/ac9c53043e55575403d99cc6ac514478a28dafde",
+                "reference": "ac9c53043e55575403d99cc6ac514478a28dafde",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": "^1.22.0",
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FemtoPixel\\Monolog\\": "src/Monolog"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jay MOULIN",
+                    "email": "jaymoulin@gmail.com",
+                    "homepage": "http://github.com/jaymoulin"
+                }
+            ],
+            "description": "Sends your logs to csv files",
+            "homepage": "http://github.com/femtopixel/monolog-csvhandler",
+            "keywords": [
+                "csv",
+                "log",
+                "logging",
+                "psr-3"
+            ],
+            "time": "2016-11-30T13:39:12+00:00"
         },
         {
             "name": "myclabs/deep-copy",
