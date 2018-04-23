@@ -55,12 +55,12 @@ class LoggerTest extends \PHPUnit\Framework\TestCase {
         
         //instantiate cymapgt logger and process log
         $cgtLogger = new Logger();
-        $cgtLogger->addLogHandler($logHandlerBootstrap);
+        $cgtLogger->addLogHandler($logHandlerBootstrap, true);
         $concreteLogger = $cgtLogger->getLogger();
         
         //write the log
-        $logMessage = "Sissoko for Balon d'Or 2019";
-        $concreteLogger->addWarning(
+        $logMessage = "Sissoko for Balon d\'Or 2019";
+        $concreteLogger->addWarning (
             $logMessage
         );
         
@@ -69,7 +69,10 @@ class LoggerTest extends \PHPUnit\Framework\TestCase {
         
         //open file and assert first line is as logged
         $logFileInMemory = file($randomNameFq);
-        $this->assertEquals($logMessage, $logFileInMemory[0]);
+        $this->assertStringStartsWith("'Sissoko for Balon d\'Or 2019'", $logFileInMemory[0]);
+        
+        //destroy the testfile
+        unlink($randomNameFq);
     }
     
     /**
