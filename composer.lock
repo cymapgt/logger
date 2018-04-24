@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b98bc9e89cef1425792ec745551d0bd2",
+    "content-hash": "9b9d0cf7fb7b71f9bab41a294d11c617",
     "packages": [
         {
             "name": "cymapgt/notifier",
@@ -1929,6 +1929,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.0.0"
+    },
     "platform-dev": []
 }
