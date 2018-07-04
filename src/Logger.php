@@ -2,7 +2,12 @@
 namespace cymapgt\core\utility\logger;
 
 use cymapgt\Exception\LoggerException;
-use Monolog\Logger as MonologLogger;
+use \Monolog\Logger as MonologLogger;
+use Monolog\Handler\NullHandler;
+
+/**
+ * @TODO: Below required for backward compatibility...remove in next iterations - cogana@gmail.com
+ */
 use cymapgt\core\utility\notifier\NotifierSmsAfricasTalkingService;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
@@ -12,16 +17,22 @@ use cymapgt\core\utility\logger\handler\NotifierSmsAfricasTalkingServiceHandler;
 /**
  * Logger
  * 
- * This class provides persistent access to logger, via encapsulating Monolog
+ * Facilitate configuration of Log Handlers and Formatters to aid Developers log
+ * to the destinations
  * 
- * This class is a Singleton
  * 
  * @author    - Cyril Ogana <cogana@gmail.com>
  * @package   - cymapgt.core.utility.logger
  * @copyright - CYMAP BUSINESS SOLUTIONS
  */
-class Logger
+class Logger implements \Psr\Log\LoggerAwareInterface
 {
+    //instantiate properties
+    private $channelName = 'null_logger';
+    private $concreteLogger = null;
+    private $nullLogger = null;
+    private $configuredLogHandlers = array();
+    
     //instantiate properties
     private static $loggerStderr;
     private static $loggerLevel1;
@@ -30,13 +41,18 @@ class Logger
     private static $loggerSecurity;
     
     /**
-     *  Prevent direct object creation
-     * 
-     * @private
-     * @final
+     *  Constructor
      */
-    final private function __construct() {
-    }
+    public function __construct($channelName = null) { //TODO: Param shoudl be required when old functionality is no longer needed
+        //Channel Name
+        $this->channelName = $channelName;
+        
+        //instantiate the Null Logger (will be used if User did not want a "real" logger e.g. when testing)
+        $nullLogger = new MonologLogger('null_logger');
+        $nullHandler = new NullHandler;
+        $nullLogger->pushHandler($nullHandler);
+        $this->nullLogger = $nullLogger;
+    }    
     
     /**
      * Prevent cloning
@@ -44,7 +60,80 @@ class Logger
      * @private
      * @final
      */
-    final private function __clone() {
+    final private function __clone() {  //@TODO: Remove when old functionality no longer needed (cogana@gmail.com)
+    }
+    
+    /**
+     * Add log handlers to the configuration
+     * 
+     * @param array $logHandlers - Array of log handler configuration. The alphanumeric keys are the namespace
+     * @param bool $createLogger - Boolean flag. If true, create concrete Logger and instantiate the log handlers
+     */
+    public function addLogHandler(array $logHandlers, $createLogger = false) {
+        try {
+            $this->configuredLogHandlers = array_merge($this->configuredLogHandlers, $logHandlers);
+
+            if ($createLogger === true) {
+                $this->createLogger($this->channelName);
+                $this->createLogHandlers();
+            }            
+        } catch (Exception $ex) {
+            throw new LoggerException (
+                "An exception occurred when adding the Log Handler to "
+                . $this->channelName
+                . ":"
+                . $ex->getMessage()
+            );
+        }
+    }
+    
+    /**
+     * Create the Monolog logger which will be injected with Handlers and Formatters
+     */
+    public function createLogger($channelName) {
+        $loggerObj = new MonologLogger($channelName);
+        
+        $this->concreteLogger = $loggerObj;
+    }
+    
+    /**
+     * Iterate the configured log handlers and create concrete handlers
+     */
+    protected function createLogHandlers() {
+        $logHandlers = $this->configuredLogHandlers;
+                      
+        foreach ($logHandlers as $handlerNamespace => $handlerDetails) {
+            if (
+                is_array($handlerDetails)
+                && array_key_exists('handler_parameters', $handlerDetails)
+            ) {
+                $handlerParameters = $handlerDetails['handler_parameters'];
+                $handlerObj = new $handlerNamespace(...$handlerParameters);
+                $this->concreteLogger->pushHandler($handlerObj);
+            }
+        }
+    }
+    
+    /**
+     *  Implement setLogger from  Psr\Log\LoggerAwareInterface
+     * 
+     * @param \Psr\Log\LoggerInterface $logger
+     */
+    public function setLogger(\Psr\Log\LoggerInterface $logger) {
+        $this->concreteLogger = $logger;
+    }
+    
+    /**
+     *  Return instance of Monolog Logger, configured with all handlers and formatters
+     * 
+     * @return \Monolog\Logger
+     */
+    public function getLoggerNew() {
+        if (is_null($this->concreteLogger)) {
+            return $this->nullLogger;
+        } else {
+            return $this->concreteLogger;
+        }
     }
     
     /**
@@ -203,5 +292,5 @@ class Logger
             self::$loggerSecurity = $CymapgtSecurityLogger;
         }
         return self::$loggerSecurity;
-    }
+    }    
 }
