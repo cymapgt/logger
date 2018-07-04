@@ -55,7 +55,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase {
         //instantiate cymapgt logger and process log
         $cgtLogger = new Logger('femtopixel_csv_test');
         $cgtLogger->addLogHandler($logHandlerBootstrap, true);
-        $concreteLogger = $cgtLogger->getLogger();
+        $concreteLogger = $cgtLogger->getLoggerNew();
         
         //write the log
         $logMessage = "Sissoko for Balon d\'Or 2019";
@@ -96,7 +96,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase {
         //Set and get the logger (developer scenario)
         $cgtLogger = new Logger('femtopixel_csv_test');
         $cgtLogger->setLogger($log);
-        $log2 = $cgtLogger->getLogger();
+        $log2 = $cgtLogger->getLoggerNew();
         
         
         // add records to the log
