@@ -219,7 +219,7 @@ class Logger implements \Psr\Log\LoggerAwareInterface
             $CymapgtLevel2LogDir = $loggerParams['log_dir'];
             $CymapgtLevel2Stream = new StreamHandler($CymapgtLevel2LogDir, MonologLogger::ERROR);
             $CymapgtLevel2Logger = new MonologLogger('cymapgt_level2');
-            $CymapgtLevel2Mailer  = \Swift_Mailer::newInstance($loggerParams['swiftmailer_transport']);
+            $CymapgtLevel2Mailer  = new \Swift_Mailer($loggerParams['swiftmailer_transport']);
             $CymapgtLevel2Message = $loggerParams['swiftmailer_message'];
             $CymapgtLevel2Logger->pushHandler($CymapgtLevel2Stream);
             $CymapgtLevel2Logger->pushHandler(new SwiftMailerHandler($CymapgtLevel2Mailer, $CymapgtLevel2Message));
@@ -249,7 +249,7 @@ class Logger implements \Psr\Log\LoggerAwareInterface
             $CymapgtLevel3LogDir = $loggerParams['log_dir'];
             $CymapgtLevel3Stream = new StreamHandler($CymapgtLevel3LogDir, MonologLogger::ERROR);
             $CymapgtLevel3Logger = new MonologLogger('cymapgt_level3');
-            $CymapgtLevel3Mailer  = \Swift_Mailer::newInstance($loggerParams['swiftmailer_transport']);
+            $CymapgtLevel3Mailer  = new \Swift_Mailer($loggerParams['swiftmailer_transport']);
             $CymapgtLevel3Message = $loggerParams['swiftmailer_message'];        
             $CymapgtLevel3Logger->pushHandler($CymapgtLevel3Stream);
             $CymapgtLevel3Logger->pushHandler(new SwiftMailerHandler($CymapgtLevel3Mailer, $CymapgtLevel3Message));
@@ -282,7 +282,7 @@ class Logger implements \Psr\Log\LoggerAwareInterface
             $CymapgtSecurityLogDir = $loggerParams['log_dir'];
             $CymapgtSecurityStream = new StreamHandler($CymapgtSecurityLogDir, MonologLogger::ERROR);
             $CymapgtSecurityLogger = new MonologLogger('cymapgt_security');
-            $CymapgtSecurityMailer  = \Swift_Mailer::newInstance($loggerParams['swiftmailer_transport']);
+            $CymapgtSecurityMailer  = new \Swift_Mailer($loggerParams['swiftmailer_transport']);
             $CymapgtSecurityMessage = $loggerParams['swiftmailer_message'];        
             $CymapgtSecurityLogger->pushHandler($CymapgtSecurityStream);
             $CymapgtSecurityLogger->pushHandler(new SwiftMailerHandler($CymapgtSecurityMailer, $CymapgtSecurityMessage));
