@@ -21,7 +21,7 @@
     "description" : "Wrapper for Monolog. Provides custom log levels with customized Handlers based on log level",
     "license" : "BSD-3-Clause",
     "require" : {
-        "php" : ">=7.0.0",
+        "php" : ">=7.2.0",
         "cymapgt/notifier" : "^3.0.0",
         "monolog/monolog" : "^1.0.0"
     },
