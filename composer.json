@@ -22,11 +22,11 @@
     "license" : "BSD-3-Clause",
     "require" : {
         "php" : ">=7.0.0",
-        "cymapgt/notifier" : "^2.0.0",
+        "cymapgt/notifier" : "^3.0.0",
         "monolog/monolog" : "^1.0.0"
     },
     "require-dev" : {
-        "phpunit/phpunit" : "6.*",
+        "phpunit/phpunit" : "8.*",
         "femtopixel/monolog-csvhandler" : "*"
     },
     "support" : {
